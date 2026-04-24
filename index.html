@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aelor Kemuri · Clan Kemuri · Suna</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --violet: #9b5de5;
+  --violet-dim: rgba(155,93,229,0.4);
+  --crystal: #88d8f0;
+  --crystal-dim: rgba(136,216,240,0.4);
+  --bg: #050508;
+  --bg2: #080810;
+  --text: #c0c0d8;
+  --text-bright: #e8e8f8;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Cormorant Garamond',serif;font-size:18px;line-height:1.8;overflow-x:hidden;cursor:none}
+
+/* ── CURSOR ── */
+#cur{position:fixed;width:10px;height:10px;background:var(--crystal);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);box-shadow:0 0 12px var(--crystal),0 0 24px rgba(136,216,240,.3);mix-blend-mode:screen;transition:width .2s,height .2s,background .3s}
+#cur-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(155,93,229,.45);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%)}
+
+/* ── CANVAS ── */
+#c-smoke,#c-mouse{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none}
+#c-smoke{z-index:0}
+#c-mouse{z-index:1}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 4rem;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(5,5,8,.85),transparent)}
+.nav-logo{font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.45em;color:var(--violet);text-transform:uppercase}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.3em;color:rgba(200,200,230,.5);text-decoration:none;text-transform:uppercase;transition:color .3s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--crystal),transparent);transform:scaleX(0);transition:transform .3s}
+.nav-links a:hover{color:var(--crystal)}
+.nav-links a:hover::after{transform:scaleX(1)}
+
+/* ── LAYOUT ── */
+main{position:relative;z-index:2}
+section{min-height:100vh;padding:8rem 6rem;position:relative}
+
+/* ── HERO ── */
+#hero{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 2rem;overflow:hidden}
+.h-clan{font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.65em;color:var(--violet);text-transform:uppercase;margin-bottom:2.2rem;opacity:0;animation:fadeUp 1.2s ease forwards .5s}
+.h-name{font-family:'Cinzel Decorative',serif;font-size:clamp(2.8rem,8vw,7rem);font-weight:900;line-height:1;background:linear-gradient(140deg,#fff 0%,var(--crystal) 38%,var(--violet) 68%,#fff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:.1em;margin-bottom:.8rem;opacity:0;animation:fadeUp 1.2s ease forwards .8s;filter:drop-shadow(0 0 50px rgba(136,216,240,.25))}
+.h-kanji{font-size:clamp(.9rem,2.5vw,1.5rem);color:rgba(155,93,229,.55);letter-spacing:.35em;margin-bottom:2.5rem;opacity:0;animation:fadeUp 1.2s ease forwards 1s}
+.h-div{width:220px;height:1px;background:linear-gradient(to right,transparent,var(--violet),var(--crystal),var(--violet),transparent);margin:0 auto 2.5rem;opacity:0;animation:fadeUp 1.2s ease forwards 1.15s}
+.h-slogan{font-style:italic;font-size:clamp(.95rem,2.2vw,1.4rem);color:rgba(210,210,240,.75);max-width:580px;margin-bottom:3.5rem;opacity:0;animation:fadeUp 1.2s ease forwards 1.3s}
+.h-crystal-wrap{opacity:0;animation:fadeUp 1.8s ease forwards 1.6s;margin-bottom:3rem}
+.h-scroll{display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:0;animation:fadeUp 1s ease forwards 2.2s}
+.h-scroll span{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.5em;color:rgba(155,93,229,.45);text-transform:uppercase}
+.scroll-line{width:1px;height:56px;background:linear-gradient(to bottom,var(--violet),transparent);animation:pulseY 2.2s ease infinite}
+
+/* floating bg crystals */
+.bgc{position:absolute;pointer-events:none;opacity:.07;animation:floatC 9s ease-in-out infinite}
+.bgc:nth-child(2n){animation-duration:13s;animation-delay:-4s}
+.bgc:nth-child(3n){animation-duration:11s;animation-delay:-7s}
+
+/* ── SECTION TITLES ── */
+.s-label{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.6em;color:var(--violet);text-transform:uppercase;display:block;margin-bottom:.9rem}
+.s-title{font-family:'Cinzel Decorative',serif;font-size:clamp(1.4rem,4vw,2.8rem);background:linear-gradient(135deg,var(--text-bright),var(--crystal));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:.6rem}
+.s-div{width:70px;height:1px;background:linear-gradient(to right,var(--violet),var(--crystal));margin-bottom:3rem}
+
+/* ── REVEAL ── */
+.rv{opacity:0;transform:translateY(36px);transition:opacity .85s ease,transform .85s ease}
+.rv.on{opacity:1;transform:translateY(0)}
+.rv.d1{transition-delay:.1s}.rv.d2{transition-delay:.22s}.rv.d3{transition-delay:.34s}.rv.d4{transition-delay:.46s}
+
+/* ── LORE ── */
+#lore{background:linear-gradient(to bottom,var(--bg),#080810,var(--bg))}
+#lore .inner{max-width:780px;margin:0 auto}
+.lore-block{margin-bottom:3.5rem;padding:2rem 2.5rem;border-left:1px solid rgba(155,93,229,.25);background:linear-gradient(to right,rgba(155,93,229,.05),transparent);position:relative}
+.lore-block::before{content:'';position:absolute;left:-1px;top:0;width:1px;height:0;background:linear-gradient(to bottom,var(--violet),var(--crystal));transition:height 1.4s ease}
+.lore-block.on::before{height:100%}
+.lore-block h3{font-family:'Cinzel',serif;font-size:.8rem;letter-spacing:.3em;color:var(--violet);text-transform:uppercase;margin-bottom:.9rem}
+.lore-block p{color:rgba(196,196,224,.8);font-size:1rem;line-height:1.95}
+
+/* ── POWERS ── */
+#powers{background:var(--bg2)}
+.pow-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.5rem;margin-top:2.5rem}
+.pow-card{padding:2.2rem;border:1px solid rgba(255,255,255,.05);border-radius:3px;position:relative;overflow:hidden;transition:transform .4s ease,border-color .4s ease;cursor:default}
+.pow-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .4s}
+.pow-card:hover{transform:translateY(-7px)}
+.pow-card:hover::before{opacity:1}
+.smoke-p{background:linear-gradient(135deg,rgba(80,80,105,.15),rgba(12,12,20,.85))}
+.smoke-p:hover{border-color:rgba(180,180,210,.35)}
+.smoke-p::before{background:radial-gradient(ellipse at center,rgba(150,150,175,.1),transparent 70%)}
+.wind-p{background:linear-gradient(135deg,rgba(100,180,220,.1),rgba(12,12,20,.85))}
+.wind-p:hover{border-color:rgba(100,200,245,.35)}
+.wind-p::before{background:radial-gradient(ellipse at center,rgba(100,200,245,.1),transparent 70%)}
+.earth-p{background:linear-gradient(135deg,rgba(120,90,50,.15),rgba(12,12,20,.85))}
+.earth-p:hover{border-color:rgba(180,140,80,.35)}
+.earth-p::before{background:radial-gradient(ellipse at center,rgba(180,140,80,.1),transparent 70%)}
+.crystal-p{background:linear-gradient(135deg,rgba(136,216,240,.12),rgba(155,93,229,.08),rgba(12,12,20,.85));grid-column:1/-1}
+.crystal-p:hover{border-color:rgba(136,216,240,.45)}
+.crystal-p::before{background:radial-gradient(ellipse at center,rgba(136,216,240,.12),transparent 70%)}
+.p-icon{font-size:1.8rem;margin-bottom:.9rem;display:block;color:var(--crystal)}
+.p-name{font-family:'Cinzel',serif;font-size:.95rem;letter-spacing:.2em;color:var(--text-bright);margin-bottom:.25rem}
+.p-sub{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.4em;color:var(--violet);text-transform:uppercase;margin-bottom:1.3rem}
+.p-desc{color:rgba(196,196,224,.7);font-size:.9rem;line-height:1.85}
+.p-bar{margin-top:1.4rem;height:1.5px;background:rgba(255,255,255,.07);border-radius:1px;overflow:hidden}
+.p-fill{height:100%;border-radius:1px;transform:scaleX(0);transform-origin:left;transition:transform 1.4s ease}
+.pow-card.on .p-fill{transform:scaleX(1)}
+.smoke-p .p-fill{background:linear-gradient(to right,#8888aa,#c0c0d0)}
+.wind-p .p-fill{background:linear-gradient(to right,#56a8d0,#88d8f0)}
+.earth-p .p-fill{background:linear-gradient(to right,#806030,#c8a060)}
+.crystal-p .p-fill{background:linear-gradient(to right,var(--violet),var(--crystal))}
+
+/* ── JUTSUS ── */
+#jutsus{background:var(--bg)}
+.j-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1.5rem;margin-top:2.5rem}
+.j-card{border:1px solid rgba(255,255,255,.06);border-radius:3px;overflow:hidden;transition:transform .4s ease,box-shadow .4s ease;cursor:default}
+.j-card:hover{transform:translateY(-5px);box-shadow:0 20px 60px rgba(155,93,229,.12)}
+.j-head{padding:1.4rem 1.8rem;position:relative;overflow:hidden}
+.j-head::before{content:'';position:absolute;inset:0}
+.j-card:nth-child(1) .j-head::before{background:linear-gradient(135deg,rgba(80,80,110,.65),rgba(15,15,25,.85))}
+.j-card:nth-child(2) .j-head::before{background:linear-gradient(135deg,rgba(80,160,210,.28),rgba(15,15,25,.85))}
+.j-card:nth-child(3) .j-head::before{background:linear-gradient(135deg,rgba(120,200,235,.22),rgba(155,93,229,.18))}
+.j-card:nth-child(4) .j-head::before{background:linear-gradient(135deg,rgba(80,80,110,.5),rgba(15,15,25,.85))}
+.j-card:nth-child(5) .j-head::before{background:linear-gradient(135deg,rgba(120,90,50,.35),rgba(80,80,100,.3))}
+.j-card:nth-child(6) .j-head::before{background:linear-gradient(135deg,rgba(120,200,235,.3),rgba(155,93,229,.22))}
+.j-rank{position:relative;z-index:1;font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.5em;color:var(--violet);text-transform:uppercase;margin-bottom:.4rem}
+.j-name{position:relative;z-index:1;font-family:'Cinzel',serif;font-size:.9rem;color:var(--text-bright);letter-spacing:.08em}
+.j-body{padding:1.4rem 1.8rem;background:rgba(5,5,8,.8)}
+.j-desc{color:rgba(196,196,224,.68);font-size:.88rem;line-height:1.75;margin-bottom:.9rem}
+.j-tags{display:flex;flex-wrap:wrap;gap:.4rem}
+.tag{font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.3em;padding:.25rem .6rem;border:1px solid rgba(155,93,229,.3);color:rgba(155,93,229,.75);text-transform:uppercase;border-radius:2px}
+.tag.c{border-color:rgba(136,216,240,.3);color:rgba(136,216,240,.75)}
+
+/* ── GALLERY ── */
+#gallery{background:var(--bg2);overflow:hidden}
+.gal-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:200px 200px;gap:1rem;margin-top:2.5rem}
+.gal-item{border-radius:3px;overflow:hidden;position:relative;cursor:default}
+.gal-item:first-child{grid-row:1/3}
+.gal-vis{width:100%;height:100%;position:relative;transition:transform .6s ease}
+.gal-item:hover .gal-vis{transform:scale(1.06)}
+.gal-ov{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:1.2rem;background:linear-gradient(to top,rgba(5,5,8,.9),transparent 55%);opacity:0;transition:opacity .4s}
+.gal-item:hover .gal-ov{opacity:1}
+.gal-ov span{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.35em;color:var(--crystal);text-transform:uppercase}
+.gv1{background:radial-gradient(ellipse at 30% 65%,rgba(155,93,229,.45),rgba(60,30,90,.2) 45%,rgba(5,5,8,1) 80%)}
+.gv2{background:radial-gradient(ellipse at 70% 30%,rgba(136,216,240,.32),rgba(20,50,90,.2) 45%,rgba(8,8,15,1) 80%)}
+.gv3{background:radial-gradient(ellipse at 50% 55%,rgba(136,216,240,.22),rgba(155,93,229,.15) 45%,rgba(5,5,8,1) 80%)}
+.gv4{background:radial-gradient(ellipse at 25% 75%,rgba(155,93,229,.38),rgba(40,20,70,.2) 45%,rgba(8,8,15,1) 80%)}
+.gv5{background:radial-gradient(ellipse at 78% 22%,rgba(136,216,240,.28),rgba(70,70,100,.15) 45%,rgba(5,5,8,1) 80%)}
+.gal-deco{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:.4;transition:opacity .4s,transform .5s}
+.gal-item:hover .gal-deco{opacity:.75;transform:translate(-50%,-50%) scale(1.12) rotate(8deg)}
+
+/* ── QUOTE ── */
+#quote{min-height:65vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:6rem 3rem}
+.q-inner{max-width:700px}
+.q-mark{font-size:5.5rem;color:rgba(155,93,229,.18);font-family:Georgia,serif;line-height:.55;margin-bottom:2rem;display:block}
+.q-text{font-style:italic;font-size:clamp(1.3rem,2.8vw,2.1rem);color:var(--text-bright);line-height:1.65;margin-bottom:1.8rem;letter-spacing:.02em}
+.q-text .wd{display:inline-block;opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease}
+.q-text.on .wd{opacity:1;transform:translateY(0)}
+.q-author{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.5em;color:var(--violet);text-transform:uppercase}
+
+/* ── FOOTER ── */
+footer{padding:2.5rem 6rem;border-top:1px solid rgba(155,93,229,.12);display:flex;justify-content:space-between;align-items:center;background:var(--bg2);position:relative;z-index:2}
+.f-name{font-family:'Cinzel Decorative',serif;font-size:.85rem;color:var(--violet)}
+.f-sub{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.4em;color:rgba(180,180,210,.28);text-transform:uppercase}
+
+/* ── KEYFRAMES ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulseY{0%,100%{opacity:1;transform:scaleY(1)}50%{opacity:.35;transform:scaleY(.65)}}
+@keyframes floatC{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-18px) rotate(6deg)}}
+@keyframes crystalGrow{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  section{padding:6rem 1.5rem}
+  nav{padding:1.2rem 1.5rem}
+  .nav-links{display:none}
+  .gal-grid{grid-template-columns:1fr;grid-template-rows:auto}
+  .gal-item:first-child{grid-row:auto}
+  footer{flex-direction:column;gap:.8rem;text-align:center;padding:2rem 1.5rem}
+  #profil [style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+<canvas id="c-smoke"></canvas>
+<canvas id="c-mouse"></canvas>
+
+<nav>
+  <div class="nav-logo">Clan Kemuri · 煙</div>
+  <ul class="nav-links">
+    <li><a href="#profil">Profil</a></li>
+    <li><a href="#lore">Lore</a></li>
+    <li><a href="#powers">Pouvoirs</a></li>
+    <li><a href="#physique">Physique</a></li>
+    <li><a href="#mental">Mental</a></li>
+    <li><a href="#histoire">Histoire</a></li>
+    <li><a href="#quote">Philosophie</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section id="hero">
+
+  <!-- Floating background crystals -->
+  <svg class="bgc" style="top:8%;left:4%;width:90px" viewBox="0 0 80 160">
+    <polygon points="40,0 65,48 54,155 26,155 15,48" fill="none" stroke="rgba(136,216,240,.9)" stroke-width=".6"/>
+    <polygon points="40,14 56,50 46,140 34,140 24,50" fill="rgba(136,216,240,.06)" stroke="rgba(155,93,229,.35)" stroke-width=".35"/>
+  </svg>
+  <svg class="bgc" style="top:18%;right:6%;width:65px;animation-delay:-2s" viewBox="0 0 80 160">
+    <polygon points="40,0 65,48 54,155 26,155 15,48" fill="none" stroke="rgba(155,93,229,.9)" stroke-width=".6"/>
+  </svg>
+  <svg class="bgc" style="bottom:18%;left:12%;width:50px;animation-delay:-5s" viewBox="0 0 80 160">
+    <polygon points="40,0 65,48 54,155 26,155 15,48" fill="none" stroke="rgba(136,216,240,.8)" stroke-width=".6"/>
+  </svg>
+  <svg class="bgc" style="bottom:28%;right:10%;width:75px;animation-delay:-1s" viewBox="0 0 80 160">
+    <polygon points="40,0 65,48 54,155 26,155 15,48" fill="rgba(155,93,229,.06)" stroke="rgba(155,93,229,.8)" stroke-width=".6"/>
+  </svg>
+  <svg class="bgc" style="top:45%;left:2%;width:40px;animation-delay:-8s" viewBox="0 0 80 160">
+    <polygon points="40,0 65,48 54,155 26,155 15,48" fill="none" stroke="rgba(136,216,240,.6)" stroke-width=".5"/>
+  </svg>
+  <svg class="bgc" style="top:35%;right:2%;width:35px;animation-delay:-3s" viewBox="0 0 80 160">
+    <polygon points="40,0 65,48 54,155 26,155 15,48" fill="none" stroke="rgba(155,93,229,.7)" stroke-width=".5"/>
+  </svg>
+
+  <div class="h-clan">Clan Kemuri · 煙の一族 · Village de Suna</div>
+  <h1 class="h-name">AELOR KEMURI</h1>
+  <div class="h-kanji">煙 · 晶遁 · 砂の隠れ里</div>
+  <div class="h-div"></div>
+  <p class="h-slogan">« Un jour… même le vent aura une forme »</p>
+
+  <!-- Crystal cluster hero -->
+  <div class="h-crystal-wrap">
+    <svg width="340" height="130" viewBox="0 0 340 130">
+      <defs>
+        <filter id="glow-hero">
+          <feGaussianBlur stdDeviation="4" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <g filter="url(#glow-hero)" opacity=".75">
+        <!-- Center crystal -->
+        <polygon points="170,4 196,52 183,124 157,124 144,52"
+          fill="rgba(136,216,240,.14)" stroke="rgba(136,216,240,.9)" stroke-width=".9"
+          style="transform-origin:170px 64px;animation:crystalGrow 1s ease forwards 2s;transform:scale(0)"/>
+        <!-- Left-1 -->
+        <polygon points="124,22 144,64 134,118 114,118 104,64"
+          fill="rgba(155,93,229,.1)" stroke="rgba(155,93,229,.7)" stroke-width=".65"
+          style="transform-origin:124px 70px;animation:crystalGrow .9s ease forwards 2.3s;transform:scale(0)"/>
+        <!-- Right-1 -->
+        <polygon points="216,22 236,64 226,118 206,118 196,64"
+          fill="rgba(155,93,229,.1)" stroke="rgba(155,93,229,.7)" stroke-width=".65"
+          style="transform-origin:216px 70px;animation:crystalGrow .9s ease forwards 2.3s;transform:scale(0)"/>
+        <!-- Left-2 -->
+        <polygon points="82,38 96,72 88,116 70,116 62,72"
+          fill="rgba(136,216,240,.07)" stroke="rgba(136,216,240,.45)" stroke-width=".45"
+          style="transform-origin:82px 77px;animation:crystalGrow .8s ease forwards 2.6s;transform:scale(0)"/>
+        <!-- Right-2 -->
+        <polygon points="258,38 272,72 264,116 246,116 238,72"
+          fill="rgba(136,216,240,.07)" stroke="rgba(136,216,240,.45)" stroke-width=".45"
+          style="transform-origin:258px 77px;animation:crystalGrow .8s ease forwards 2.6s;transform:scale(0)"/>
+        <!-- Far Left -->
+        <polygon points="46,50 57,78 50,114 36,114 30,78"
+          fill="rgba(155,93,229,.05)" stroke="rgba(155,93,229,.35)" stroke-width=".35"
+          style="transform-origin:46px 82px;animation:crystalGrow .7s ease forwards 2.9s;transform:scale(0)"/>
+        <!-- Far Right -->
+        <polygon points="294,50 305,78 298,114 284,114 278,78"
+          fill="rgba(155,93,229,.05)" stroke="rgba(155,93,229,.35)" stroke-width=".35"
+          style="transform-origin:294px 82px;animation:crystalGrow .7s ease forwards 2.9s;transform:scale(0)"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="h-scroll">
+    <span>Descendre</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ═══════════════ PROFIL ═══════════════ -->
+<section id="profil" style="min-height:auto;padding:5rem 6rem;background:linear-gradient(to bottom,var(--bg),var(--bg2))">
+  <span class="s-label rv">Identité · 識別</span>
+  <h2 class="s-title rv d1">Fiche de Personnage</h2>
+  <div class="s-div rv d2"></div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;max-width:1100px;margin:0 auto" class="rv d2">
+    <!-- Stats left -->
+    <div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem">
+        <div style="padding:1.4rem;border:1px solid rgba(155,93,229,.2);border-radius:3px;background:rgba(155,93,229,.04);text-align:center">
+          <div style="font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.5em;color:var(--violet);text-transform:uppercase;margin-bottom:.5rem">Âge</div>
+          <div style="font-family:'Cinzel Decorative',serif;font-size:2.2rem;background:linear-gradient(135deg,var(--text-bright),var(--crystal));-webkit-background-clip:text;background-clip:text;color:transparent">11</div>
+          <div style="font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.3em;color:rgba(200,200,230,.4)">ANS</div>
+        </div>
+        <div style="padding:1.4rem;border:1px solid rgba(136,216,240,.2);border-radius:3px;background:rgba(136,216,240,.04);text-align:center">
+          <div style="font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.5em;color:var(--crystal);text-transform:uppercase;margin-bottom:.5rem">Taille</div>
+          <div style="font-family:'Cinzel Decorative',serif;font-size:2.2rem;background:linear-gradient(135deg,var(--crystal),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent">1m48</div>
+          <div style="font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.3em;color:rgba(200,200,230,.4)">CM</div>
+        </div>
+        <div style="padding:1.4rem;border:1px solid rgba(155,93,229,.2);border-radius:3px;background:rgba(155,93,229,.04);text-align:center">
+          <div style="font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.5em;color:var(--violet);text-transform:uppercase;margin-bottom:.5rem">Poids</div>
+          <div style="font-family:'Cinzel Decorative',serif;font-size:2.2rem;background:linear-gradient(135deg,var(--text-bright),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent">36</div>
+          <div style="font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.3em;color:rgba(200,200,230,.4)">KG</div>
+        </div>
+        <div style="padding:1.4rem;border:1px solid rgba(136,216,240,.2);border-radius:3px;background:rgba(136,216,240,.04);text-align:center">
+          <div style="font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.5em;color:var(--crystal);text-transform:uppercase;margin-bottom:.5rem">Village</div>
+          <div style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--text-bright);margin-top:.3rem">Suna</div>
+          <div style="font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.3em;color:rgba(200,200,230,.4)">砂隠れの里</div>
+        </div>
+      </div>
+
+      <!-- Social -->
+      <div style="padding:1.6rem 2rem;border:1px solid rgba(155,93,229,.15);border-radius:3px;background:rgba(5,5,8,.6)">
+        <div style="font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.5em;color:var(--violet);text-transform:uppercase;margin-bottom:1.2rem">Réseaux · Identités</div>
+        <div style="display:flex;flex-direction:column;gap:.9rem">
+          <div style="display:flex;align-items:center;gap:1rem">
+            <div style="width:36px;height:36px;border:1px solid rgba(88,101,242,.5);border-radius:6px;background:rgba(88,101,242,.1);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">🎮</div>
+            <div>
+              <div style="font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.4em;color:rgba(88,101,242,.9);text-transform:uppercase">Discord</div>
+              <div style="font-family:'Cinzel',serif;font-size:.85rem;color:var(--text-bright);letter-spacing:.05em">hedyzz_bro</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:1rem">
+            <div style="width:36px;height:36px;border:1px solid rgba(100,200,100,.4);border-radius:6px;background:rgba(60,120,60,.12);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">⛏️</div>
+            <div>
+              <div style="font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.4em;color:rgba(100,200,100,.9);text-transform:uppercase">Minecraft</div>
+              <div style="font-family:'Cinzel',serif;font-size:.85rem;color:var(--text-bright);letter-spacing:.05em">Hedyzz_</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:1rem">
+            <div style="width:36px;height:36px;border:1px solid rgba(155,93,229,.4);border-radius:6px;background:rgba(155,93,229,.1);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">🌫️</div>
+            <div>
+              <div style="font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.4em;color:var(--violet);text-transform:uppercase">Clan</div>
+              <div style="font-family:'Cinzel',serif;font-size:.85rem;color:var(--text-bright);letter-spacing:.05em">Kemuri · 煙</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Character gif right -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:1.5rem">
+      <div style="position:relative;padding:2rem;border:1px solid rgba(155,93,229,.2);border-radius:6px;background:radial-gradient(ellipse at center,rgba(155,93,229,.08),transparent 70%);display:inline-block">
+        <img src="pickaxe.gif" alt="Aelor Kemuri" style="width:220px;image-rendering:pixelated;filter:drop-shadow(0 0 20px rgba(155,93,229,.5)) drop-shadow(0 0 40px rgba(136,216,240,.2))" />
+        <div style="position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);white-space:nowrap;font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.4em;color:var(--violet);text-transform:uppercase;background:var(--bg2);padding:.2rem .8rem;border:1px solid rgba(155,93,229,.2);border-radius:2px">Aelor Kemuri · Genin</div>
+      </div>
+      <p style="font-style:italic;color:rgba(196,196,224,.55);font-size:.88rem;text-align:center;max-width:280px;line-height:1.7">Yeux violets. Cheveux noirs flottants. Peau pâle. Une aura de fumée ne le quitte jamais.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ LORE ═══════════════ -->
+<section id="lore">
+  <div class="inner">
+    <span class="s-label rv">Origines & Histoire</span>
+    <h2 class="s-title rv d1">L'Éveil du Clan</h2>
+    <div class="s-div rv d2"></div>
+
+    <div class="lore-block rv">
+      <h3>Le Clan Kemuri · 煙の一族</h3>
+      <p>Discret et méconnu, le clan Kemuri maîtrise la fumée depuis des générations. Installés dans les terres arides de Suna, ils manipulent le chakra comme une vapeur invisible — capables de se fondre dans l'obscurité, de dissimuler leurs alliés, d'étouffer leurs ennemis dans une brume empoisonnée. Souvent perçus comme faibles ou instables par les autres clans, ils portent pourtant un secret : la fumée n'est que la chrysalide du cristal.</p>
+    </div>
+
+    <div class="lore-block rv d1">
+      <h3>L'Éveil d'Aelor · 覚醒</h3>
+      <p>Très jeune, Aelor ressent un décalage profond : là où les membres de son clan embrassent la nature volatile de leur pouvoir, lui la rejette. Il déteste l'idée de disparaître, de ne jamais laisser de trace. Un jour, en observant le sable chauffé par le soleil, il aperçoit des fragments brillants — presque cristallins. Une idée naît : <em>« Et si la fumée pouvait devenir solide ? »</em> Lors de l'examen Genin, pour la première fois, de fines structures translucides se forment dans sa fumée. Des éclats de cristal — fragiles, imparfaits… mais bien réels.</p>
+    </div>
+
+    <div class="lore-block rv d2">
+      <h3>La Quête du Shōton · 晶遁</h3>
+      <p>Le Shōton — la Release du Cristal — est une nature de chakra légendaire, fusion du Fūton (Vent) et du Doton (Terre). Nul membre du clan Kemuri ne l'a jamais accomplie. Aelor est convaincu que la fumée n'est pas l'opposée du cristal, mais sa forme transitoire : il suffit de lui apprendre à se figer, à s'ordonner, à rayonner. La fumée est le chaos — le cristal est l'éternité. Entre les deux : la volonté d'Aelor. <em>« Tout se dissipe… sauf ce qui trouve une forme. »</em></p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ POWERS ═══════════════ -->
+<section id="powers">
+  <span class="s-label rv">Nature de Chakra</span>
+  <h2 class="s-title rv d1">Pouvoirs & Capacités</h2>
+  <div class="s-div rv d2"></div>
+
+  <div class="pow-grid">
+    <div class="pow-card smoke-p rv d1">
+      <span class="p-icon">〜</span>
+      <div class="p-name">Kemuri · 煙</div>
+      <div class="p-sub">Release de la Fumée</div>
+      <p class="p-desc">Manipulation instinctive de la fumée et de la vapeur de chakra. Invisibilité, confusion sensorielle, toxines gazeuses, voile de brume suffocant. La marque ancestrale du clan — une seconde nature pour Aelor, aussi naturelle que respirer.</p>
+      <div class="p-bar"><div class="p-fill" style="width:88%"></div></div>
+    </div>
+
+    <div class="pow-card wind-p rv d2">
+      <span class="p-icon">⊹</span>
+      <div class="p-name">Fūton · 風遁</div>
+      <div class="p-sub">Nature du Vent</div>
+      <p class="p-desc">Chakra de nature tranchante et invisible. Aelor l'utilise pour propulser ses nuages de fumée, créer des rafales déchirantes et préparer le terrain au façonnement cristallin. Le vent est l'architecte de la tempête.</p>
+      <div class="p-bar"><div class="p-fill" style="width:68%"></div></div>
+    </div>
+
+    <div class="pow-card earth-p rv d3">
+      <span class="p-icon">◈</span>
+      <div class="p-name">Doton · 土遁</div>
+      <div class="p-sub">Nature de la Terre</div>
+      <p class="p-desc">Chakra lourd et structurant. Aelor le maîtrise partiellement — encore apprenti dans cet art qui lui est étranger. C'est la clé manquante : la rigidité qui transformera sa fumée éphémère en cristal éternel.</p>
+      <div class="p-bar"><div class="p-fill" style="width:42%"></div></div>
+    </div>
+
+    <div class="pow-card crystal-p rv d4">
+      <span class="p-icon">✦</span>
+      <div class="p-name">Shōton · 晶遁</div>
+      <div class="p-sub">Release du Cristal · En Éveil</div>
+      <p class="p-desc">La fusion légendaire du Fūton et du Doton — permettant de cristalliser toute matière organique, de créer des structures de diamant pur, d'emprisonner ses ennemis dans des prisons translucides. Aelor est à l'aube de ce pouvoir : certains soirs, quand sa fumée se fige dans l'air froid, on voit briller ses premiers éclats de lumière cristalline. L'aboutissement d'une existence entière.</p>
+      <div class="p-bar"><div class="p-fill" style="width:19%"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ PHYSIQUE ═══════════════ -->
+<section id="physique" style="background:var(--bg)">
+  <span class="s-label rv">Corps & Apparence · 外見</span>
+  <h2 class="s-title rv d1">Présentation Physique</h2>
+  <div class="s-div rv d2"></div>
+
+  <div style="max-width:900px;margin:0 auto">
+
+    <!-- Bloc intro avec accent -->
+    <div style="padding:2.5rem 3rem;border:1px solid rgba(136,216,240,.18);border-radius:3px;background:linear-gradient(135deg,rgba(136,216,240,.05),rgba(155,93,229,.04),transparent);margin-bottom:3rem;position:relative;overflow:hidden" class="rv">
+      <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(to bottom,var(--crystal),var(--violet))"></div>
+      <p style="font-style:italic;font-size:1.15rem;color:rgba(220,220,245,.85);line-height:2;padding-left:1rem">Aelor Kemuri est un enfant de onze ans à la silhouette fine et encore juvénile — mais quelque chose dans sa façon de se tenir, dans l'immobilité absolue de son regard, trahit une maturité qui dépasse largement son âge. Il y a en lui une présence qui précède ses mots. On le sent avant de le voir.</p>
+    </div>
+
+    <!-- Corps principal -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:2.5rem" class="rv d1">
+      <div style="padding:2rem 2.2rem;border-left:1px solid rgba(155,93,229,.25);background:linear-gradient(to right,rgba(155,93,229,.04),transparent)">
+        <h3 style="font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.35em;color:var(--violet);text-transform:uppercase;margin-bottom:1.1rem">Silhouette & Stature</h3>
+        <p style="color:rgba(196,196,224,.82);font-size:.95rem;line-height:1.95">À 1m48 pour 36 kilogrammes, Aelor possède une ossature légère et des membres longs pour son âge, lui donnant une allure presque aérienne. Il ne prend pas de place — ou plutôt, il choisit de n'en prendre aucune. Sa posture est toujours droite, jamais rigide. Il se déplace sans bruit, avec une économie de gestes qui rappelle quelqu'un habitué à ne pas se faire remarquer. Même au repos, son corps semble en veille permanente, comme une fumée qui attend qu'on lui donne une direction.</p>
+      </div>
+      <div style="padding:2rem 2.2rem;border-left:1px solid rgba(136,216,240,.2);background:linear-gradient(to right,rgba(136,216,240,.04),transparent)">
+        <h3 style="font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.35em;color:var(--crystal);text-transform:uppercase;margin-bottom:1.1rem">Teint & Peau</h3>
+        <p style="color:rgba(196,196,224,.82);font-size:.95rem;line-height:1.95">Sa peau est anormalement pâle pour quelqu'un qui vit dans les terres arides de Suna. Là où le soleil marque ses habitants d'un teint doré ou hâlé, Aelor semble épargné — comme si la chaleur refusait de l'atteindre, repoussée par la fine brume de chakra qui l'entoure en permanence. Cette pâleur ne le rend pas maladif, bien au contraire : elle lui confère une apparence presque translucide, comme un premier reflet de ce cristal qu'il cherche à incarner. Sur ses poignets et ses avant-bras, on peut apercevoir, dans la bonne lumière, de très fines veines d'un violet discret.</p>
+      </div>
+    </div>
+
+    <div style="padding:2rem 2.5rem;border-left:1px solid rgba(155,93,229,.25);background:linear-gradient(to right,rgba(155,93,229,.05),transparent);margin-bottom:2rem" class="rv d2">
+      <h3 style="font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.35em;color:var(--violet);text-transform:uppercase;margin-bottom:1.1rem">Les Cheveux · 髪</h3>
+      <p style="color:rgba(196,196,224,.82);font-size:.95rem;line-height:1.95">Ses cheveux sont noirs, légèrement plus longs que la moyenne pour un garçon de son âge — ils tombent en mèches irrégulières autour de son visage et dans sa nuque. Jamais vraiment coiffés, jamais vraiment en désordre non plus. La particularité qui frappe immédiatement : ils bougent. Pas de façon dramatique ou évidente, mais de manière subliminale — quelques mèches qui flottent comme sous l'effet d'un vent qu'on ne sent pas, d'autres qui se déposent lentement, comme si l'air autour de lui avait une consistance légèrement différente de partout ailleurs. C'est une manifestation passive de son chakra, un phénomène qu'il ne contrôle pas et dont il ne remarque même plus l'existence. Ceux qui le côtoient, eux, ne s'y habituent jamais vraiment.</p>
+    </div>
+
+    <div style="padding:2rem 2.5rem;border-left:1px solid rgba(136,216,240,.3);background:linear-gradient(to right,rgba(136,216,240,.06),transparent);margin-bottom:2rem;position:relative" class="rv d3">
+      <div style="position:absolute;top:1.5rem;right:2rem;font-size:2.5rem;opacity:.12">👁</div>
+      <h3 style="font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.35em;color:var(--crystal);text-transform:uppercase;margin-bottom:1.1rem">Les Yeux · 眼 · Trait Distinctif</h3>
+      <p style="color:rgba(196,196,224,.82);font-size:.95rem;line-height:1.95">Ce sont ses yeux qui définissent Aelor avant tout le reste. Violets — d'un violet profond et inhabituel, qui n'appartient à aucune palette normale. Ils ne cillent pas souvent. Ils ne fuient pas non plus. Ils regardent, et ce regard a quelque chose d'inconfortable pour celui qui le reçoit : il donne l'impression d'être analysé en profondeur, comme si Aelor cherchait à percevoir non pas ce que vous montrez, mais ce que vous êtes réellement en dessous. Certains élèves de l'académie disent qu'il "voit à travers les gens". D'autres disent simplement qu'il fait peur. Lui ne comprend pas pourquoi son regard gêne autant — c'est simplement sa façon naturelle d'observer le monde. Dans la pénombre ou lorsque son chakra s'emballe, une très légère luminescence violette semble émaner de ses iris, à peine perceptible, comme un cristal sous une lumière rasante.</p>
+    </div>
+
+    <div style="padding:2rem 2.5rem;border-left:1px solid rgba(155,93,229,.2);background:linear-gradient(to right,rgba(155,93,229,.04),transparent)" class="rv d4">
+      <h3 style="font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.35em;color:var(--violet);text-transform:uppercase;margin-bottom:1.1rem">L'Aura · 気配</h3>
+      <p style="color:rgba(196,196,224,.82);font-size:.95rem;line-height:1.95">Même sans rien faire, Aelor n'est pas tout à fait comme les autres. Il y a autour de lui une sensation diffuse — quelque chose entre la fraîcheur et la légèreté, comme si l'air portait en permanence de fines particules invisibles. Par temps très sec ou très froid, on peut parfois distinguer à l'œil nu une brume ténue qui flotte à hauteur de ses épaules, se dissipant avant qu'on puisse vraiment en être sûr. Son chakra fuit légèrement, en continu, sans qu'il s'en rende compte — comme un robinet qu'on n'a jamais vraiment fermé. Les shinobis entraînés à percevoir le chakra disent que le sien a une texture particulière : lisse en surface, mais avec quelque chose de tranchant en dessous. Comme du verre poli cachant un bord effilé.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════ MENTAL ═══════════════ -->
+<section id="mental" style="background:var(--bg2)">
+  <span class="s-label rv">Esprit & Caractère · 心理</span>
+  <h2 class="s-title rv d1">Psychologie & Personnalité</h2>
+  <div class="s-div rv d2"></div>
+
+  <div style="max-width:900px;margin:0 auto">
+
+    <div style="padding:2.5rem 3rem;border:1px solid rgba(155,93,229,.18);border-radius:3px;background:linear-gradient(135deg,rgba(155,93,229,.06),transparent);margin-bottom:3rem;position:relative;overflow:hidden" class="rv">
+      <div style="position:absolute;top:0;right:0;width:3px;height:100%;background:linear-gradient(to bottom,var(--violet),var(--crystal))"></div>
+      <p style="font-style:italic;font-size:1.15rem;color:rgba(220,220,245,.85);line-height:2;padding-right:1rem">Aelor est calme. D'un calme qui ne ressemble pas à de la sérénité — plutôt à un lac dont on ne voit pas le fond. Il pense continuellement, analyse en permanence, et ne dit que ce qu'il a décidé de dire. Le reste reste à l'intérieur, là où personne ne peut le toucher.</p>
+    </div>
+
+    <div style="padding:2rem 2.5rem;border-left:1px solid rgba(136,216,240,.22);background:linear-gradient(to right,rgba(136,216,240,.04),transparent);margin-bottom:2rem" class="rv d1">
+      <h3 style="font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.35em;color:var(--crystal);text-transform:uppercase;margin-bottom:1.1rem">L'Observateur · 観察者</h3>
+      <p style="color:rgba(196,196,224,.82);font-size:.95rem;line-height:1.95">Aelor ne fonce jamais tête baissée. Là où d'autres élèves de l'académie agissent, réagissent, parlent fort et occupent l'espace, lui recule d'un pas mental et regarde. Il catalogues les comportements, note les habitudes, identifie les failles — pas forcément par calcul malveillant, mais parce que c'est simplement ainsi que son esprit fonctionne. Observer avant d'agir. Comprendre avant de parler. Il peut rester silencieux pendant des heures dans un groupe sans que personne ne remarque vraiment son absence, puis formuler en une phrase une conclusion que les autres auraient mis une journée à articuler. Cette capacité à lire les situations fait de lui quelqu'un d'utile dans un groupe — et de légèrement intimidant à titre individuel.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:2rem" class="rv d2">
+      <div style="padding:2rem 2.2rem;border-left:1px solid rgba(155,93,229,.25);background:linear-gradient(to right,rgba(155,93,229,.04),transparent)">
+        <h3 style="font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.35em;color:var(--violet);text-transform:uppercase;margin-bottom:1.1rem">La Distance · 距離感</h3>
+        <p style="color:rgba(196,196,224,.82);font-size:.95rem;line-height:1.95">Aelor a du mal à créer des liens. Non par rejet des autres — il n'est pas froid au sens cruel du terme — mais parce qu'il ne se sent pas encore "complet". Il a l'impression d'être un travail en cours, une ébauche. Comment partager quelque chose d'inachevé ? Il écoute, il observe les autres, parfois il sourit d'une façon discrète qui surprend ceux qui le pensaient totalement fermé. Mais il maintient une distance instinctive, un espace entre lui et le monde, aussi léger et constant que la brume qui l'entoure.</p>
+      </div>
+      <div style="padding:2rem 2.2rem;border-left:1px solid rgba(136,216,240,.2);background:linear-gradient(to right,rgba(136,216,240,.04),transparent)">
+        <h3 style="font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.35em;color:var(--crystal);text-transform:uppercase;margin-bottom:1.1rem">La Volonté · 意志</h3>
+        <p style="color:rgba(196,196,224,.82);font-size:.95rem;line-height:1.95">Sous le calme apparent se trouve quelque chose de redoutable : une détermination silencieuse et absolue. Aelor n'abandonne pas. Jamais. Il peut échouer, recommencer, se tromper de direction — mais il ne lâche pas. Cette obstination n'est pas visible, elle ne se manifeste pas par des discours ou des poings serrés. Elle est là, simplement, comme un fil tendu que rien ne peut couper. Ceux qui le sous-estiment parce qu'il est calme ont tendance à regretter cette erreur.</p>
+      </div>
+    </div>
+
+    <div style="padding:2rem 2.5rem;border-left:1px solid rgba(155,93,229,.25);background:linear-gradient(to right,rgba(155,93,229,.05),transparent);margin-bottom:2rem" class="rv d3">
+      <h3 style="font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.35em;color:var(--violet);text-transform:uppercase;margin-bottom:1.1rem">La Philosophie · 哲学</h3>
+      <p style="color:rgba(196,196,224,.82);font-size:.95rem;line-height:1.95">Pour son âge, Aelor a une vision du monde étonnamment structurée. Il pense en termes de <em>formes et d'états</em> — tout ce qui existe est soit stable, soit en transition. La fumée est un état de transition. Le cristal est la forme accomplie. Et lui se voit comme quelqu'un encore en transition, travaillant à se figer dans quelque chose de permanent et de solide. Cette pensée dépasse largement le cadre du ninjutsu — c'est une façon d'interpréter la vie entière. Il croit profondément que l'éphémère n'est pas une fatalité, que tout ce qui semble instable peut, avec la bonne volonté, trouver une forme définitive. <em>« Tout se dissipe… sauf ce qui trouve une forme. »</em> Cette phrase n'est pas qu'un mantra pour lui — c'est une certitude ontologique.</p>
+    </div>
+
+    <div style="padding:2rem 2.5rem;border-left:1px solid rgba(136,216,240,.2);background:linear-gradient(to right,rgba(136,216,240,.04),transparent);margin-bottom:2rem" class="rv d4">
+      <h3 style="font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.35em;color:var(--crystal);text-transform:uppercase;margin-bottom:1.1rem">Les Contradictions · 矛盾</h3>
+      <p style="color:rgba(196,196,224,.82);font-size:.95rem;line-height:1.95">Aelor n'est pas sans failles. Derrière la façade posée se cachent des contradictions profondes : il rejette l'éphémère mais sa fumée, par nature, se dissipe toujours. Il veut laisser une trace mais refuse de s'attacher. Il aspire à la permanence mais vit dans l'instant de chaque analyse. Il est parfois trop dans sa tête, à tel point qu'il loupe des choses simples — une main tendue, un sourire sincère, une invitation à juste exister sans penser. Son côté analytique peut aussi le pousser à froidement évaluer des situations qui méritent une réponse émotionnelle, ce qui peut blesser sans qu'il le veuille ni le réalise. Il a encore beaucoup à apprendre — pas de techniques, mais de lui-même.</p>
+    </div>
+
+    <!-- Citation encadrée -->
+    <div style="text-align:center;padding:2.5rem;border-top:1px solid rgba(155,93,229,.15);border-bottom:1px solid rgba(155,93,229,.15);margin-top:1rem" class="rv">
+      <p style="font-style:italic;font-size:1.3rem;color:rgba(220,220,245,.75);letter-spacing:.04em;line-height:1.75">« Tout se dissipe… sauf ce qui trouve une forme. »</p>
+      <div style="font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.5em;color:var(--violet);text-transform:uppercase;margin-top:1rem">— Aelor Kemuri</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ HISTOIRE ═══════════════ -->
+<section id="histoire" style="background:linear-gradient(to bottom,var(--bg),#080810,var(--bg))">
+  <span class="s-label rv">Chronologie · 歴史</span>
+  <h2 class="s-title rv d1">Histoire & Parcours</h2>
+  <div class="s-div rv d2"></div>
+
+  <div style="max-width:860px;margin:0 auto">
+
+    <!-- Timeline verticale -->
+    <div style="position:relative;padding-left:2.5rem">
+      <!-- Ligne verticale -->
+      <div style="position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--violet),var(--crystal),var(--violet),transparent)"></div>
+
+      <!-- Étape 1 -->
+      <div style="position:relative;margin-bottom:3.5rem" class="rv">
+        <div style="position:absolute;left:-2.5rem;top:.3rem;width:10px;height:10px;border-radius:50%;background:var(--violet);box-shadow:0 0 10px var(--violet);transform:translateX(-50%) translateX(.5px)"></div>
+        <div style="padding:2rem 2.5rem;border:1px solid rgba(155,93,229,.18);border-radius:3px;background:linear-gradient(135deg,rgba(155,93,229,.06),rgba(5,5,8,.8))">
+          <div style="font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.5em;color:var(--violet);text-transform:uppercase;margin-bottom:.5rem">Naissance · Premières Années</div>
+          <h3 style="font-family:'Cinzel',serif;font-size:1rem;color:var(--text-bright);letter-spacing:.08em;margin-bottom:1rem">L'Enfant de la Brume</h3>
+          <p style="color:rgba(196,196,224,.8);font-size:.95rem;line-height:1.95">Aelor naît dans le désert de Suna, au sein du clan Kemuri — une famille ancienne et discrète, dont la réputation n'a jamais vraiment dépassé les ruelles poussiéreuses de la ville. Son enfance se déroule dans les odeurs de sable chaud et dans le souffle constant du vent qui traverse les toits de pierre. Dès ses premières années, il est différent. Là où les autres enfants du clan jouent, courent, se chamaillent, Aelor s'asseoit à l'écart et regarde. Il regarde les flammes du foyer, il regarde la fumée monter et se défaire, il regarde les adultes parler. Il catalogue. Il mémorise. Ses parents le trouvent étrange, mais pas inquiétant — juste silencieux, comme certains enfants le sont. Ce qu'ils ne savent pas encore, c'est que derrière ce silence s'élabore quelque chose d'extrêmement structuré.</p>
+        </div>
+      </div>
+
+      <!-- Étape 2 -->
+      <div style="position:relative;margin-bottom:3.5rem" class="rv d1">
+        <div style="position:absolute;left:-2.5rem;top:.3rem;width:10px;height:10px;border-radius:50%;background:var(--crystal);box-shadow:0 0 10px var(--crystal);transform:translateX(-50%) translateX(.5px)"></div>
+        <div style="padding:2rem 2.5rem;border:1px solid rgba(136,216,240,.18);border-radius:3px;background:linear-gradient(135deg,rgba(136,216,240,.05),rgba(5,5,8,.8))">
+          <div style="font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.5em;color:var(--crystal);text-transform:uppercase;margin-bottom:.5rem">Le Décalage · Révélation Intérieure</div>
+          <h3 style="font-family:'Cinzel',serif;font-size:1rem;color:var(--text-bright);letter-spacing:.08em;margin-bottom:1rem">Le Rejet de la Fumée</h3>
+          <p style="color:rgba(196,196,224,.8);font-size:.95rem;line-height:1.95">Autour de ses sept ans, Aelor commence à vraiment comprendre ce que signifie appartenir au clan Kemuri. Les anciens enseignent que la fumée est une grâce — être insaisissable, indéfinissable, présent partout et nulle part. Pour eux, la volatilité est une force. Mais Aelor, en écoutant ces leçons, ressent quelque chose qu'il ne sait pas encore nommer : un refus viscéral. L'idée d'être une fumée — quelque chose qui se dissipe, qui ne laisse rien derrière lui — le révolte profondément. Il veut exister. Il veut que son passage dans le monde laisse quelque chose de réel, quelque chose qu'on ne peut pas balayer d'un geste de la main. Ce rejet de la philosophie de son propre clan crée en lui une fracture intérieure qu'il gardera secrète pendant des années, incapable d'en parler, même à ses proches.</p>
+        </div>
+      </div>
+
+      <!-- Étape 3 -->
+      <div style="position:relative;margin-bottom:3.5rem" class="rv d2">
+        <div style="position:absolute;left:-2.5rem;top:.3rem;width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--crystal));box-shadow:0 0 16px var(--violet);transform:translateX(-50%) translateX(.5px)"></div>
+        <div style="padding:2rem 2.5rem;border:1px solid rgba(155,93,229,.25);border-radius:3px;background:linear-gradient(135deg,rgba(155,93,229,.08),rgba(136,216,240,.04),rgba(5,5,8,.8))">
+          <div style="font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.5em;color:var(--violet);text-transform:uppercase;margin-bottom:.5rem">L'Illumination · 啓示</div>
+          <h3 style="font-family:'Cinzel',serif;font-size:1rem;color:var(--text-bright);letter-spacing:.08em;margin-bottom:1rem">Le Sable et les Cristaux</h3>
+          <p style="color:rgba(196,196,224,.8);font-size:.95rem;line-height:1.95">La révélation arrive un après-midi ordinaire. Aelor est assis seul à la lisière du désert, les yeux perdus sur les dunes qui chauffent sous le soleil de Suna. Et là, dans la lumière rasante de fin de journée, il voit quelque chose qu'il n'avait jamais vraiment regardé : le sable. Pas le sable en général — certains grains, précisément. Des fragments minuscules qui brillent différemment, qui captent la lumière et la renvoient en éclats multicolores. Du quartz. Des microcristaux. Du sable qui, sous certaines conditions, devient presque cristallin. Une pensée simple et fulgurante traverse alors son esprit d'enfant de sept ans : <em>le sable, c'est de la roche dissoute. Et la fumée, c'est de la matière dissoute. Alors si le sable peut redevenir cristal avec la chaleur et la pression… la fumée le peut aussi.</em> Ce n'est pas encore du ninjutsu. Ce n'est pas encore de la théorie. C'est une intuition brute, une certitude instinctive qui va définir toute la trajectoire de sa vie.</p>
+        </div>
+      </div>
+
+      <!-- Étape 4 -->
+      <div style="position:relative;margin-bottom:3.5rem" class="rv d3">
+        <div style="position:absolute;left:-2.5rem;top:.3rem;width:10px;height:10px;border-radius:50%;background:var(--violet);box-shadow:0 0 10px var(--violet);transform:translateX(-50%) translateX(.5px)"></div>
+        <div style="padding:2rem 2.5rem;border:1px solid rgba(155,93,229,.18);border-radius:3px;background:linear-gradient(135deg,rgba(155,93,229,.06),rgba(5,5,8,.8))">
+          <div style="font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.5em;color:var(--violet);text-transform:uppercase;margin-bottom:.5rem">L'Académie · 学校</div>
+          <h3 style="font-family:'Cinzel',serif;font-size:1rem;color:var(--text-bright);letter-spacing:.08em;margin-bottom:1rem">L'Étudiant Silencieux</h3>
+          <p style="color:rgba(196,196,224,.8);font-size:.95rem;line-height:1.95">À l'académie de Suna, Aelor ne se distingue pas immédiatement. Il n'est pas le plus fort, ni le plus rapide, ni le plus expressif. Il est dans la moyenne pour presque tout — sauf pour deux choses. Sa maîtrise instinctive des techniques de clan liées à la fumée est bien supérieure à celle d'élèves deux ou trois ans plus âgés que lui. Et sa capacité à analyser les situations de combat, à trouver l'angle mort, la faille, le moment précis où l'adversaire se découvre, est déconcertante. Les professeurs le remarquent sans trop savoir quoi en faire. Il ne lève jamais la main. Il ne pose pas de questions en cours. Mais quand on l'interroge directement, ses réponses sont d'une précision chirurgicale. En dehors des heures de cours, il s'entraîne seul, en silence, travaillant obstinément sur un seul objectif : faire tenir sa fumée un peu plus longtemps. La densifier. La structurer. Lui donner une forme.</p>
+        </div>
+      </div>
+
+      <!-- Étape 5 — Examen Genin -->
+      <div style="position:relative;margin-bottom:2rem" class="rv d4">
+        <div style="position:absolute;left:-2.5rem;top:.3rem;width:14px;height:14px;border-radius:50%;background:linear-gradient(135deg,var(--crystal),var(--violet));box-shadow:0 0 20px var(--crystal),0 0 40px rgba(155,93,229,.3);transform:translateX(-50%) translateX(.5px)"></div>
+        <div style="padding:2.5rem;border:1px solid rgba(136,216,240,.3);border-radius:3px;background:linear-gradient(135deg,rgba(136,216,240,.07),rgba(155,93,229,.07),rgba(5,5,8,.85));position:relative;overflow:hidden">
+          <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--crystal),var(--violet),transparent)"></div>
+          <div style="font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.5em;color:var(--crystal);text-transform:uppercase;margin-bottom:.5rem">Événement Clé · 重要な瞬間</div>
+          <h3 style="font-family:'Cinzel',serif;font-size:1rem;color:var(--text-bright);letter-spacing:.08em;margin-bottom:1rem">L'Examen Genin — La Première Promesse</h3>
+          <p style="color:rgba(196,196,224,.8);font-size:.95rem;line-height:1.95;margin-bottom:1.2rem">L'examen Genin arrive. Aelor est face à un adversaire plus grand, plus imposant, visiblement plus expérimenté dans les jutsu offensifs bruts. Sur le papier, le combat est déséquilibré. Aelor ne cherche pas à attaquer. Il disparaît dans un voile de fumée — mais une fumée différente de ce que l'examinateur a déjà vu. Plus dense. Plus lente à se dissiper. Presque solide. Son adversaire frappe dans le vide, pivote, cherche une silhouette qui n'est nulle part et partout à la fois. Le terrain entier est recouvert d'un brouillard épais, opaque, qui semble avoir une mémoire — il ne coule pas, il reste.</p>
+          <p style="color:rgba(196,196,224,.8);font-size:.95rem;line-height:1.95;margin-bottom:1.2rem">Puis cela arrive.</p>
+          <p style="color:rgba(220,220,245,.92);font-size:1rem;line-height:2;font-style:italic;padding:1.2rem 1.5rem;border-left:2px solid var(--crystal);background:rgba(136,216,240,.04);margin-bottom:1.2rem">Dans la brume épaisse, quelque chose scintille. De fines structures translucides commencent à se former — fragiles, imparfaites, tremblantes comme des premières syllabes d'une langue qu'on n'a pas encore apprise. Des éclats. Des fragments de cristal. Minuscules. Réels.</p>
+          <p style="color:rgba(196,196,224,.8);font-size:.95rem;line-height:1.95">Aelor ne maîtrise pas encore le Shōton. Personne dans le clan Kemuri ne l'a jamais fait. Mais dans cet instant suspendu, au milieu d'un examen d'académie ordinaire, il en touche l'ébauche. Profitant de la désorientation totale de son adversaire, il l'immobilise avec une combinaison de fumée dense et de particules semi-solides. Les examinateurs restent silencieux un long moment après la fin du combat. Ce n'était pas de la puissance. C'était une direction. Une promesse faite à voix haute pour la première fois — et cette fois, il y avait des témoins.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ QUOTE ═══════════════ -->
+<section id="quote">
+  <div class="q-inner">
+    <span class="q-mark rv">"</span>
+    <p class="q-text rv" id="qt">Tout se dissipe… sauf ce qui trouve une forme. Un jour, même le vent aura une structure — même la fumée aura une âme. Ce jour-là, je serai là pour la saisir.</p>
+    <div class="q-author rv d2">— Aelor Kemuri · Clan de la Fumée · Genin de Suna</div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="f-name">Aelor Kemuri</div>
+  <div class="f-sub">煙 · Clan Kemuri · Genin de Suna · 晶遁 · hedyzz_bro</div>
+</footer>
+
+<script>
+/* ─── CURSOR ─── */
+const cur = document.getElementById('cur');
+const ring = document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX; my=e.clientY;
+  cur.style.left=mx+'px'; cur.style.top=my+'px';
+});
+(function animRing(){
+  rx+=(mx-rx)*.11; ry+=(my-ry)*.11;
+  ring.style.left=rx+'px'; ring.style.top=ry+'px';
+  requestAnimationFrame(animRing);
+})();
+document.querySelectorAll('a,.pow-card,.j-card,.gal-item').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.width='18px';cur.style.height='18px';cur.style.background='var(--violet)'});
+  el.addEventListener('mouseleave',()=>{cur.style.width='10px';cur.style.height='10px';cur.style.background='var(--crystal)'});
+});
+
+/* ─── SMOKE CANVAS ─── */
+const sc=document.getElementById('c-smoke');
+const sx=sc.getContext('2d');
+const mc=document.getElementById('c-mouse');
+const mx2=mc.getContext('2d');
+function resize(){sc.width=mc.width=innerWidth;sc.height=mc.height=innerHeight}
+resize(); window.addEventListener('resize',resize);
+
+class SP {
+  constructor(){this.reset(true)}
+  reset(init){
+    this.x=Math.random()*sc.width;
+    this.y=init?Math.random()*sc.height:sc.height+60;
+    this.r=Math.random()*130+50;
+    this.vx=(Math.random()-.5)*.28;
+    this.vy=-(Math.random()*.38+.08);
+    this.op=0; this.mop=Math.random()*.065+.018;
+    this.phase=true;
+    this.life=0; this.ml=Math.random()*450+280;
+    this.rot=Math.random()*Math.PI*2;
+    this.rv=(Math.random()-.5)*.0025;
+    const t=Math.random();
+    this.col=t<.35?'155,93,229':t<.65?'136,216,240':'158,158,185';
+  }
+  tick(){
+    this.x+=this.vx; this.y+=this.vy;
+    this.rot+=this.rv; this.life++;
+    if(this.phase&&this.op<this.mop) this.op+=.00025;
+    else{this.phase=false; this.op-=.00008;}
+    if(this.life>=this.ml||this.op<=0) this.reset(false);
+  }
+  draw(ctx){
+    ctx.save(); ctx.translate(this.x,this.y); ctx.rotate(this.rot);
+    const g=ctx.createRadialGradient(0,0,0,0,0,this.r);
+    g.addColorStop(0,`rgba(${this.col},${this.op})`);
+    g.addColorStop(1,`rgba(${this.col},0)`);
+    ctx.fillStyle=g;
+    ctx.beginPath(); ctx.arc(0,0,this.r,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+}
+const smokes=Array.from({length:45},()=>new SP());
+(function animSmoke(){
+  sx.clearRect(0,0,sc.width,sc.height);
+  smokes.forEach(p=>{p.tick();p.draw(sx)});
+  requestAnimationFrame(animSmoke);
+})();
+
+/* ─── MOUSE TRAIL ─── */
+let pmx=-200,pmy=-200;
+const trail=[];
+document.addEventListener('mousemove',e=>{pmx=e.clientX;pmy=e.clientY;
+  for(let i=0;i<2;i++) trail.push({
+    x:pmx+(Math.random()-.5)*18, y:pmy+(Math.random()-.5)*18,
+    r:Math.random()*22+8, op:.18,
+    life:0, ml:Math.random()*55+38,
+    vx:(Math.random()-.5)*.8, vy:-Math.random()*1.2-.4,
+    col:Math.random()<.5?'155,93,229':'136,216,240'
+  });
+});
+(function animTrail(){
+  mx2.clearRect(0,0,mc.width,mc.height);
+  for(let i=trail.length-1;i>=0;i--){
+    const p=trail[i];
+    p.life++; p.x+=p.vx; p.y+=p.vy; p.r*=1.022;
+    p.op*=(1-p.life/p.ml);
+    if(p.life>=p.ml||p.op<.002){trail.splice(i,1);continue}
+    const g=mx2.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r);
+    g.addColorStop(0,`rgba(${p.col},${p.op})`);
+    g.addColorStop(1,`rgba(${p.col},0)`);
+    mx2.fillStyle=g;
+    mx2.beginPath(); mx2.arc(p.x,p.y,p.r,0,Math.PI*2); mx2.fill();
+  }
+  requestAnimationFrame(animTrail);
+})();
+
+/* ─── SCROLL REVEAL ─── */
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on')})
+},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.rv,.lore-block,.pow-card,.j-card').forEach(el=>obs.observe(el));
+
+/* ─── QUOTE WORD ANIMATION ─── */
+const qt=document.getElementById('qt');
+if(qt){
+  const words=qt.textContent.split(' ');
+  qt.innerHTML=words.map((w,i)=>`<span class="wd" style="transition-delay:${i*.058}s">${w}&nbsp;</span>`).join('');
+}
+
+/* ─── PARALLAX ─── */
+const bgCrystals=document.querySelectorAll('.bgc');
+let ticking=false;
+window.addEventListener('scroll',()=>{
+  if(!ticking){requestAnimationFrame(()=>{
+    const sy=scrollY;
+    bgCrystals.forEach((c,i)=>{c.style.transform=`translateY(${sy*(0.04+i*.018)}px)`});
+    ticking=false;
+  }); ticking=true;}
+});
+</script>
+</body>
+</html>
