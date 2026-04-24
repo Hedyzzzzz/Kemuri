@@ -8,30 +8,33 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
 <style>
 :root {
-  --violet: #9b5de5;
-  --violet-dim: rgba(155,93,229,0.4);
-  --crystal: #88d8f0;
-  --crystal-dim: rgba(136,216,240,0.4);
-  --bg: #050508;
-  --bg2: #080810;
-  --text: #c0c0d8;
-  --text-bright: #e8e8f8;
+  --violet: #a066f0;
+  --violet-dim: rgba(160,102,240,0.4);
+  --violet-bright: #c49cff;
+  --crystal: #7ed5f2;
+  --crystal-dim: rgba(126,213,242,0.4);
+  --crystal-bright: #b2eaff;
+  --bg: #04040a;
+  --bg2: #07070f;
+  --text: #b8b8d4;
+  --text-bright: #eaeaf8;
+  --gold: #c8a55a;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:'Cormorant Garamond',serif;font-size:18px;line-height:1.8;overflow-x:hidden;cursor:none}
+body{background:var(--bg);color:var(--text);font-family:'Cormorant Garamond',serif;font-size:18px;line-height:1.8;overflow-x:hidden;cursor:none;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;background-image:radial-gradient(rgba(160,102,240,.032) 1px,transparent 1px);background-size:40px 40px;background-attachment:fixed}
 
 /* ── CURSOR ── */
-#cur{position:fixed;width:10px;height:10px;background:var(--crystal);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);box-shadow:0 0 12px var(--crystal),0 0 24px rgba(136,216,240,.3);mix-blend-mode:screen;transition:width .2s,height .2s,background .3s}
-#cur-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(155,93,229,.45);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%)}
+#cur{position:fixed;width:10px;height:10px;background:var(--crystal);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);box-shadow:0 0 14px var(--crystal),0 0 28px rgba(126,213,242,.35),0 0 50px rgba(126,213,242,.15);mix-blend-mode:screen;transition:width .2s,height .2s,background .3s}
+#cur-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(160,102,240,.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);box-shadow:0 0 10px rgba(160,102,240,.2)}
 
 /* ── CANVAS ── */
-#c-smoke,#c-mouse{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none}
-#c-smoke{z-index:0}
-#c-mouse{z-index:1}
+#c-smoke,#c-mouse{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;mix-blend-mode:screen}
+#c-smoke{z-index:5}
+#c-mouse{z-index:6}
 
 /* ── NAV ── */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 4rem;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(5,5,8,.85),transparent)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 4rem;display:flex;justify-content:space-between;align-items:center;background:rgba(4,4,10,.55);backdrop-filter:blur(22px) saturate(160%);-webkit-backdrop-filter:blur(22px) saturate(160%);border-bottom:1px solid rgba(160,102,240,.1);box-shadow:0 1px 40px rgba(4,4,10,.3)}
 .nav-logo{font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.45em;color:var(--violet);text-transform:uppercase}
 .nav-links{display:flex;gap:2.5rem;list-style:none}
 .nav-links a{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.3em;color:rgba(200,200,230,.5);text-decoration:none;text-transform:uppercase;transition:color .3s;position:relative}
@@ -41,14 +44,20 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 4rem;display:
 
 /* ── LAYOUT ── */
 main{position:relative;z-index:2}
-section{min-height:100vh;padding:8rem 6rem;position:relative}
+section{min-height:100vh;padding:8rem 6rem;position:relative;background:transparent}
+
+/* Sections bg2 : fondu haut + bas vers transparent */
+#powers,#gallery,#mental{background:linear-gradient(to bottom,transparent 0%,rgba(7,7,15,.78) 10%,rgba(7,7,15,.78) 90%,transparent 100%) !important}
+#lore,#histoire{background:linear-gradient(to bottom,transparent 0%,rgba(8,8,16,.55) 10%,rgba(8,8,16,.55) 90%,transparent 100%) !important}
+#profil{background:linear-gradient(to bottom,transparent 0%,rgba(7,7,15,.4) 30%,rgba(7,7,15,.35) 70%,transparent 100%) !important}
+#physique{background:transparent !important}
 
 /* ── HERO ── */
 #hero{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 2rem;overflow:hidden}
 .h-clan{font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.65em;color:var(--violet);text-transform:uppercase;margin-bottom:2.2rem;opacity:0;animation:fadeUp 1.2s ease forwards .5s}
-.h-name{font-family:'Cinzel Decorative',serif;font-size:clamp(2.8rem,8vw,7rem);font-weight:900;line-height:1;background:linear-gradient(140deg,#fff 0%,var(--crystal) 38%,var(--violet) 68%,#fff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:.1em;margin-bottom:.8rem;opacity:0;animation:fadeUp 1.2s ease forwards .8s;filter:drop-shadow(0 0 50px rgba(136,216,240,.25))}
+.h-name{font-family:'Cinzel Decorative',serif;font-size:clamp(2.8rem,8vw,7rem);font-weight:900;line-height:1;background:linear-gradient(140deg,#fff 0%,var(--crystal-bright) 28%,var(--crystal) 45%,var(--violet) 65%,var(--violet-bright) 80%,#fff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:.1em;margin-bottom:.8rem;opacity:0;animation:fadeUp 1.2s ease forwards .8s;filter:drop-shadow(0 0 60px rgba(126,213,242,.3)) drop-shadow(0 0 30px rgba(160,102,240,.2))}
 .h-kanji{font-size:clamp(.9rem,2.5vw,1.5rem);color:rgba(155,93,229,.55);letter-spacing:.35em;margin-bottom:2.5rem;opacity:0;animation:fadeUp 1.2s ease forwards 1s}
-.h-div{width:220px;height:1px;background:linear-gradient(to right,transparent,var(--violet),var(--crystal),var(--violet),transparent);margin:0 auto 2.5rem;opacity:0;animation:fadeUp 1.2s ease forwards 1.15s}
+.h-div{width:260px;height:1px;background:linear-gradient(to right,transparent,var(--violet),var(--crystal-bright),var(--crystal),var(--violet),transparent);margin:0 auto 2.5rem;opacity:0;animation:fadeUp 1.2s ease forwards 1.15s;box-shadow:0 0 12px rgba(126,213,242,.3)}
 .h-slogan{font-style:italic;font-size:clamp(.95rem,2.2vw,1.4rem);color:rgba(210,210,240,.75);max-width:580px;margin-bottom:3.5rem;opacity:0;animation:fadeUp 1.2s ease forwards 1.3s}
 .h-crystal-wrap{opacity:0;animation:fadeUp 1.8s ease forwards 1.6s;margin-bottom:3rem}
 .h-scroll{display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:0;animation:fadeUp 1s ease forwards 2.2s}
@@ -61,9 +70,9 @@ section{min-height:100vh;padding:8rem 6rem;position:relative}
 .bgc:nth-child(3n){animation-duration:11s;animation-delay:-7s}
 
 /* ── SECTION TITLES ── */
-.s-label{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.6em;color:var(--violet);text-transform:uppercase;display:block;margin-bottom:.9rem}
+.s-label{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.6em;color:var(--violet);text-transform:uppercase;display:block;margin-bottom:.9rem;text-shadow:0 0 20px rgba(160,102,240,.4)}
 .s-title{font-family:'Cinzel Decorative',serif;font-size:clamp(1.4rem,4vw,2.8rem);background:linear-gradient(135deg,var(--text-bright),var(--crystal));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:.6rem}
-.s-div{width:70px;height:1px;background:linear-gradient(to right,var(--violet),var(--crystal));margin-bottom:3rem}
+.s-div{display:flex;align-items:center;gap:.7rem;margin-bottom:3rem;width:fit-content}.s-div::before,.s-div::after{content:'';height:1px;width:28px;background:linear-gradient(to right,var(--violet),var(--crystal))}.s-div-diamond{width:7px;height:7px;background:linear-gradient(135deg,var(--violet),var(--crystal));transform:rotate(45deg);flex-shrink:0;box-shadow:0 0 10px rgba(126,213,242,.5)}
 
 /* ── REVEAL ── */
 .rv{opacity:0;transform:translateY(36px);transition:opacity .85s ease,transform .85s ease}
@@ -73,19 +82,23 @@ section{min-height:100vh;padding:8rem 6rem;position:relative}
 /* ── LORE ── */
 #lore{background:linear-gradient(to bottom,var(--bg),#080810,var(--bg))}
 #lore .inner{max-width:780px;margin:0 auto}
-.lore-block{margin-bottom:3.5rem;padding:2rem 2.5rem;border-left:1px solid rgba(155,93,229,.25);background:linear-gradient(to right,rgba(155,93,229,.05),transparent);position:relative}
+.lore-block{margin-bottom:3.5rem;padding:2rem 2.5rem;border-left:1px solid rgba(160,102,240,.28);background:linear-gradient(to right,rgba(160,102,240,.06),transparent);position:relative;border-radius:0 4px 4px 0;transition:background .4s}
 .lore-block::before{content:'';position:absolute;left:-1px;top:0;width:1px;height:0;background:linear-gradient(to bottom,var(--violet),var(--crystal));transition:height 1.4s ease}
+.lore-block::after{content:'◈';position:absolute;top:1.8rem;right:2rem;font-size:.7rem;color:rgba(160,102,240,.15);transition:color .4s,opacity .4s}
 .lore-block.on::before{height:100%}
+.lore-block.on::after{color:rgba(160,102,240,.35)}
 .lore-block h3{font-family:'Cinzel',serif;font-size:.8rem;letter-spacing:.3em;color:var(--violet);text-transform:uppercase;margin-bottom:.9rem}
 .lore-block p{color:rgba(196,196,224,.8);font-size:1rem;line-height:1.95}
 
 /* ── POWERS ── */
 #powers{background:var(--bg2)}
 .pow-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.5rem;margin-top:2.5rem}
-.pow-card{padding:2.2rem;border:1px solid rgba(255,255,255,.05);border-radius:3px;position:relative;overflow:hidden;transition:transform .4s ease,border-color .4s ease;cursor:default}
+.pow-card{padding:2.2rem;border:1px solid rgba(255,255,255,.05);border-radius:4px;position:relative;overflow:hidden;transition:transform .4s ease,border-color .4s ease,box-shadow .4s ease;cursor:default}
 .pow-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .4s}
-.pow-card:hover{transform:translateY(-7px)}
+.pow-card::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.04) 50%,transparent 60%);background-size:200% 100%;opacity:0;transition:opacity .3s}
+.pow-card:hover{transform:translateY(-7px);box-shadow:0 30px 80px rgba(0,0,0,.4)}
 .pow-card:hover::before{opacity:1}
+.pow-card:hover::after{opacity:1;animation:cardShimmer .6s ease forwards}
 .smoke-p{background:linear-gradient(135deg,rgba(80,80,105,.15),rgba(12,12,20,.85))}
 .smoke-p:hover{border-color:rgba(180,180,210,.35)}
 .smoke-p::before{background:radial-gradient(ellipse at center,rgba(150,150,175,.1),transparent 70%)}
@@ -113,8 +126,10 @@ section{min-height:100vh;padding:8rem 6rem;position:relative}
 /* ── JUTSUS ── */
 #jutsus{background:var(--bg)}
 .j-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1.5rem;margin-top:2.5rem}
-.j-card{border:1px solid rgba(255,255,255,.06);border-radius:3px;overflow:hidden;transition:transform .4s ease,box-shadow .4s ease;cursor:default}
-.j-card:hover{transform:translateY(-5px);box-shadow:0 20px 60px rgba(155,93,229,.12)}
+.j-card{border:1px solid rgba(255,255,255,.06);border-radius:4px;overflow:hidden;transition:transform .4s ease,box-shadow .4s ease;cursor:default;position:relative}
+.j-card::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.03) 50%,transparent 60%);background-size:200% 100%;opacity:0;pointer-events:none;transition:opacity .3s}
+.j-card:hover{transform:translateY(-5px);box-shadow:0 20px 60px rgba(160,102,240,.15)}
+.j-card:hover::after{opacity:1;animation:cardShimmer .6s ease forwards}
 .j-head{padding:1.4rem 1.8rem;position:relative;overflow:hidden}
 .j-head::before{content:'';position:absolute;inset:0}
 .j-card:nth-child(1) .j-head::before{background:linear-gradient(135deg,rgba(80,80,110,.65),rgba(15,15,25,.85))}
@@ -150,17 +165,19 @@ section{min-height:100vh;padding:8rem 6rem;position:relative}
 .gal-item:hover .gal-deco{opacity:.75;transform:translate(-50%,-50%) scale(1.12) rotate(8deg)}
 
 /* ── QUOTE ── */
-#quote{min-height:65vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:6rem 3rem}
-.q-inner{max-width:700px}
-.q-mark{font-size:5.5rem;color:rgba(155,93,229,.18);font-family:Georgia,serif;line-height:.55;margin-bottom:2rem;display:block}
+#quote{min-height:65vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:6rem 3rem;position:relative;overflow:hidden}
+#quote::before{content:'晶';position:absolute;font-size:28rem;color:rgba(160,102,240,.025);font-family:'Cinzel Decorative',serif;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;line-height:1;letter-spacing:0}
+.q-inner{max-width:700px;position:relative;z-index:1}
+.q-mark{font-size:5.5rem;color:rgba(160,102,240,.22);font-family:Georgia,serif;line-height:.55;margin-bottom:2rem;display:block;filter:drop-shadow(0 0 20px rgba(160,102,240,.3))}
 .q-text{font-style:italic;font-size:clamp(1.3rem,2.8vw,2.1rem);color:var(--text-bright);line-height:1.65;margin-bottom:1.8rem;letter-spacing:.02em}
 .q-text .wd{display:inline-block;opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease}
 .q-text.on .wd{opacity:1;transform:translateY(0)}
 .q-author{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.5em;color:var(--violet);text-transform:uppercase}
 
 /* ── FOOTER ── */
-footer{padding:2.5rem 6rem;border-top:1px solid rgba(155,93,229,.12);display:flex;justify-content:space-between;align-items:center;background:var(--bg2);position:relative;z-index:2}
-.f-name{font-family:'Cinzel Decorative',serif;font-size:.85rem;color:var(--violet)}
+footer{padding:2.5rem 6rem;border-top:1px solid rgba(160,102,240,.15);display:flex;justify-content:space-between;align-items:center;background:var(--bg2);position:relative;z-index:2}
+footer::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(to right,transparent,var(--violet),var(--crystal),var(--violet),transparent);opacity:.5}
+.f-name{font-family:'Cinzel Decorative',serif;font-size:.85rem;color:var(--violet);text-shadow:0 0 20px rgba(160,102,240,.4)}
 .f-sub{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.4em;color:rgba(180,180,210,.28);text-transform:uppercase}
 
 /* ── KEYFRAMES ── */
@@ -169,6 +186,18 @@ footer{padding:2.5rem 6rem;border-top:1px solid rgba(155,93,229,.12);display:fle
 @keyframes floatC{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-18px) rotate(6deg)}}
 @keyframes crystalGrow{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
 @keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+@keyframes cardShimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes auroraFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(60px,-40px) scale(1.08)}66%{transform:translate(-40px,30px) scale(.95)}}
+@keyframes auroraFloat2{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-50px,60px) scale(1.05)}66%{transform:translate(70px,-30px) scale(.92)}}
+
+/* ── GRAIN OVERLAY ── */
+#grain{position:fixed;inset:0;z-index:9997;pointer-events:none;opacity:.028;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px}
+
+/* ── AURORA ── */
+.aurora-orb{position:fixed;pointer-events:none;z-index:0;border-radius:50%;filter:blur(110px);opacity:.11}
+.aurora-orb.a1{width:700px;height:700px;background:radial-gradient(circle,rgba(160,102,240,1),transparent 70%);top:-15%;left:-10%;animation:auroraFloat 22s ease-in-out infinite}
+.aurora-orb.a2{width:600px;height:600px;background:radial-gradient(circle,rgba(126,213,242,1),transparent 70%);bottom:-10%;right:-8%;animation:auroraFloat2 18s ease-in-out infinite}
+.aurora-orb.a3{width:400px;height:400px;background:radial-gradient(circle,rgba(160,102,240,.6),transparent 70%);top:40%;right:20%;animation:auroraFloat 30s ease-in-out infinite reverse;opacity:.06}
 
 /* ── RESPONSIVE ── */
 @media(max-width:768px){
@@ -186,6 +215,10 @@ footer{padding:2.5rem 6rem;border-top:1px solid rgba(155,93,229,.12);display:fle
 
 <div id="cur"></div>
 <div id="cur-ring"></div>
+<div id="grain"></div>
+<div class="aurora-orb a1"></div>
+<div class="aurora-orb a2"></div>
+<div class="aurora-orb a3"></div>
 <canvas id="c-smoke"></canvas>
 <canvas id="c-mouse"></canvas>
 
@@ -283,10 +316,10 @@ footer{padding:2.5rem 6rem;border-top:1px solid rgba(155,93,229,.12);display:fle
 </section>
 
 <!-- ═══════════════ PROFIL ═══════════════ -->
-<section id="profil" style="min-height:auto;padding:5rem 6rem;background:linear-gradient(to bottom,var(--bg),var(--bg2))">
+<section id="profil" style="min-height:auto;padding:5rem 6rem">
   <span class="s-label rv">Identité · 識別</span>
   <h2 class="s-title rv d1">Fiche de Personnage</h2>
-  <div class="s-div rv d2"></div>
+  <div class="s-div rv d2"><div class="s-div-diamond"></div></div>
 
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;max-width:1100px;margin:0 auto" class="rv d2">
     <!-- Stats left -->
@@ -359,7 +392,7 @@ footer{padding:2.5rem 6rem;border-top:1px solid rgba(155,93,229,.12);display:fle
   <div class="inner">
     <span class="s-label rv">Origines & Histoire</span>
     <h2 class="s-title rv d1">L'Éveil du Clan</h2>
-    <div class="s-div rv d2"></div>
+    <div class="s-div rv d2"><div class="s-div-diamond"></div></div>
 
     <div class="lore-block rv">
       <h3>Le Clan Kemuri · 煙の一族</h3>
@@ -373,7 +406,7 @@ footer{padding:2.5rem 6rem;border-top:1px solid rgba(155,93,229,.12);display:fle
 
     <div class="lore-block rv d2">
       <h3>La Quête du Shōton · 晶遁</h3>
-      <p>Le Shōton — le Kekkei Genkai du Cristal — est une nature de chakra légendaire, fusion du Fūton (Vent) et du Doton (Terre). Nul membre du clan Kemuri ne l'a jamais accomplie. Aelor est convaincu que la fumée n'est pas l'opposée du cristal, mais sa forme transitoire : il suffit de lui apprendre à se figer, à s'ordonner, à rayonner. La fumée est le chaos — le cristal est l'éternité. Entre les deux : la volonté d'Aelor. <em>« Tout se dissipe… sauf ce qui trouve une forme. »</em></p>
+      <p>Le Shōton — la Release du Cristal — est une nature de chakra légendaire, fusion du Fūton (Vent) et du Doton (Terre). Nul membre du clan Kemuri ne l'a jamais accomplie. Aelor est convaincu que la fumée n'est pas l'opposée du cristal, mais sa forme transitoire : il suffit de lui apprendre à se figer, à s'ordonner, à rayonner. La fumée est le chaos — le cristal est l'éternité. Entre les deux : la volonté d'Aelor. <em>« Tout se dissipe… sauf ce qui trouve une forme. »</em></p>
     </div>
   </div>
 </section>
@@ -382,13 +415,13 @@ footer{padding:2.5rem 6rem;border-top:1px solid rgba(155,93,229,.12);display:fle
 <section id="powers">
   <span class="s-label rv">Nature de Chakra</span>
   <h2 class="s-title rv d1">Pouvoirs & Capacités</h2>
-  <div class="s-div rv d2"></div>
+  <div class="s-div rv d2"><div class="s-div-diamond"></div></div>
 
   <div class="pow-grid">
     <div class="pow-card smoke-p rv d1">
       <span class="p-icon">〜</span>
       <div class="p-name">Kemuri · 煙</div>
-      <div class="p-sub">Kekkei Genkai de la Fumée</div>
+      <div class="p-sub">Release de la Fumée</div>
       <p class="p-desc">Manipulation instinctive de la fumée et de la vapeur de chakra. Invisibilité, confusion sensorielle, toxines gazeuses, voile de brume suffocant. La marque ancestrale du clan — une seconde nature pour Aelor, aussi naturelle que respirer.</p>
       <div class="p-bar"><div class="p-fill" style="width:88%"></div></div>
     </div>
@@ -412,7 +445,7 @@ footer{padding:2.5rem 6rem;border-top:1px solid rgba(155,93,229,.12);display:fle
     <div class="pow-card crystal-p rv d4">
       <span class="p-icon">✦</span>
       <div class="p-name">Shōton · 晶遁</div>
-      <div class="p-sub">Kekkei Genkai du Cristal · En Éveil</div>
+      <div class="p-sub">Release du Cristal · En Éveil</div>
       <p class="p-desc">La fusion légendaire du Fūton et du Doton — permettant de cristalliser toute matière organique, de créer des structures de diamant pur, d'emprisonner ses ennemis dans des prisons translucides. Aelor est à l'aube de ce pouvoir : certains soirs, quand sa fumée se fige dans l'air froid, on voit briller ses premiers éclats de lumière cristalline. L'aboutissement d'une existence entière.</p>
       <div class="p-bar"><div class="p-fill" style="width:19%"></div></div>
     </div>
@@ -420,10 +453,10 @@ footer{padding:2.5rem 6rem;border-top:1px solid rgba(155,93,229,.12);display:fle
 </section>
 
 <!-- ═══════════════ PHYSIQUE ═══════════════ -->
-<section id="physique" style="background:var(--bg)">
+<section id="physique">
   <span class="s-label rv">Corps & Apparence · 外見</span>
   <h2 class="s-title rv d1">Présentation Physique</h2>
-  <div class="s-div rv d2"></div>
+  <div class="s-div rv d2"><div class="s-div-diamond"></div></div>
 
   <div style="max-width:900px;margin:0 auto">
 
@@ -465,10 +498,10 @@ footer{padding:2.5rem 6rem;border-top:1px solid rgba(155,93,229,.12);display:fle
 </section>
 
 <!-- ═══════════════ MENTAL ═══════════════ -->
-<section id="mental" style="background:var(--bg2)">
+<section id="mental">
   <span class="s-label rv">Esprit & Caractère · 心理</span>
   <h2 class="s-title rv d1">Psychologie & Personnalité</h2>
-  <div class="s-div rv d2"></div>
+  <div class="s-div rv d2"><div class="s-div-diamond"></div></div>
 
   <div style="max-width:900px;margin:0 auto">
 
@@ -512,10 +545,10 @@ footer{padding:2.5rem 6rem;border-top:1px solid rgba(155,93,229,.12);display:fle
 </section>
 
 <!-- ═══════════════ HISTOIRE ═══════════════ -->
-<section id="histoire" style="background:linear-gradient(to bottom,var(--bg),#080810,var(--bg))">
+<section id="histoire">
   <span class="s-label rv">Chronologie · 歴史</span>
   <h2 class="s-title rv d1">Histoire & Parcours</h2>
-  <div class="s-div rv d2"></div>
+  <div class="s-div rv d2"><div class="s-div-diamond"></div></div>
 
   <div style="max-width:860px;margin:0 auto">
 
@@ -629,11 +662,11 @@ class SP {
   constructor(){this.reset(true)}
   reset(init){
     this.x=Math.random()*sc.width;
-    this.y=init?Math.random()*sc.height:sc.height+60;
+    this.y=init?Math.random()*document.body.scrollHeight:sc.height+60;
     this.r=Math.random()*130+50;
     this.vx=(Math.random()-.5)*.28;
     this.vy=-(Math.random()*.38+.08);
-    this.op=0; this.mop=Math.random()*.065+.018;
+    this.op=0; this.mop=Math.random()*.09+.03;
     this.phase=true;
     this.life=0; this.ml=Math.random()*450+280;
     this.rot=Math.random()*Math.PI*2;
@@ -658,7 +691,7 @@ class SP {
     ctx.restore();
   }
 }
-const smokes=Array.from({length:45},()=>new SP());
+const smokes=Array.from({length:65},()=>new SP());
 (function animSmoke(){
   sx.clearRect(0,0,sc.width,sc.height);
   smokes.forEach(p=>{p.tick();p.draw(sx)});
